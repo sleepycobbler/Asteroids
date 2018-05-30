@@ -171,35 +171,29 @@ void Game::handleCollisions()
 			switch ((*iRock)->getSize()) 
 			{
 				case BIG_ROCK_SIZE:
-				{
 					if (BIG_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
+						(*iBullet).kill();
 						breakBigRock(newRocks, *iRock);
 						(**iRock).kill();
 						
 					}
 					break;
-				}
-				break;
 				case MEDIUM_ROCK_SIZE:
-				{
 					if (MEDIUM_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
+						(*iBullet).kill();
 						breakMedRock(newRocks, *iRock);
 						(**iRock).kill();
 					}
 					break;
-				}
-				break;
 				case SMALL_ROCK_SIZE:
-				{
 					if (SMALL_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
+						(*iBullet).kill();
 						(**iRock).kill();
 					}
 					break;
-				}
-				break;
 				default:
 					break;
 			}
@@ -216,6 +210,7 @@ void Game::handleCollisions()
 	for (vector<Rock*>::iterator iRock = newRocks.begin(); iRock != newRocks.end(); iRock++)
 	{
 		asteroids.push_back(*iRock);
+		cout << "PushBack newrocks\n";
 	}
 
 	newRocks.clear();
@@ -232,6 +227,7 @@ void Game::breakBigRock(std::vector<Rock*> & newRocks, Rock * copy)
 	newRocks.push_back(new MedRock(copy->getPoint()));
 	newRocks.push_back(new MedRock(copy->getPoint()));
 	newRocks.push_back(new  SmRock(copy->getPoint()));
+	cout << "bigRock broken\n";
 }
 
 void Game::breakMedRock(std::vector<Rock*> & newRocks, Rock * copy)
