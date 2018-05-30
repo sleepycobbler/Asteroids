@@ -43,6 +43,9 @@ public:
 
 	void createBigRock(Point pos);
 
+	void breakBigRock(std::vector<Rock*> & newRocks, Rock* copy);
+	void breakMedRock(std::vector<Rock*> & newRocks, Rock* copy);
+
 	float getClosestDistance(const FlyingObject &obj1, const FlyingObject &obj2) const;
 
 

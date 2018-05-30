@@ -37,7 +37,7 @@ Game::Game(Point tl, Point br)
 {
 	for (int i = 0; i < 5; i++)
 	{
-		Point pos(random(50, 100), random(50, 100));
+		Point pos(200, random(-200, 200));
 		createBigRock(pos);
 	}
 }
@@ -168,12 +168,57 @@ void Game::handleCollisions()
 	{
 		for (vector<Bullet>::iterator iBullet = bullets.begin(); iBullet != bullets.end(); iBullet++)
 		{
-			if (getClosestDistance(*(*iRock), *iBullet) < 10.0)
+			switch ((*iRock)->getSize()) 
 			{
-				
+				case BIG_ROCK_SIZE:
+				{
+					if (BIG_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
+					{
+						breakBigRock(newRocks, *iRock);
+						(**iRock).kill();
+						
+					}
+					break;
+				}
+				break;
+				case MEDIUM_ROCK_SIZE:
+				{
+					if (MEDIUM_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
+					{
+						breakMedRock(newRocks, *iRock);
+						(**iRock).kill();
+					}
+					break;
+				}
+				break;
+				case SMALL_ROCK_SIZE:
+				{
+					if (SMALL_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
+					{
+						(**iRock).kill();
+					}
+					break;
+				}
+				break;
+				default:
+					break;
 			}
 		}
+
+		if (getClosestDistance(ship, **iRock) < BIG_ROCK_SIZE    && (*iRock)->getSize() == BIG_ROCK_SIZE    ||
+			getClosestDistance(ship, **iRock) < MEDIUM_ROCK_SIZE && (*iRock)->getSize() == MEDIUM_ROCK_SIZE ||
+			getClosestDistance(ship, **iRock) < SMALL_ROCK_SIZE  && (*iRock)->getSize() == SMALL_ROCK_SIZE)
+		{
+			ship.kill();
+		}
 	}
+
+	for (vector<Rock*>::iterator iRock = newRocks.begin(); iRock != newRocks.end(); iRock++)
+	{
+		asteroids.push_back(*iRock);
+	}
+
+	newRocks.clear();
 }
 
 void Game::createBigRock(Point pos)
@@ -181,3 +226,17 @@ void Game::createBigRock(Point pos)
 	Rock* newAsteroid = new BigRock(pos);
 	asteroids.push_back(newAsteroid);
 }
+
+void Game::breakBigRock(std::vector<Rock*> & newRocks, Rock * copy)
+{
+	newRocks.push_back(new MedRock(copy->getPoint()));
+	newRocks.push_back(new MedRock(copy->getPoint()));
+	newRocks.push_back(new  SmRock(copy->getPoint()));
+}
+
+void Game::breakMedRock(std::vector<Rock*> & newRocks, Rock * copy)
+{
+	newRocks.push_back(new SmRock(copy->getPoint()));
+	newRocks.push_back(new SmRock(copy->getPoint()));
+}
+
