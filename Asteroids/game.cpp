@@ -100,11 +100,14 @@ void Game::advanceBullets()
 
 void Game::advance()
 {
-	advanceAsteroids();
-	ship.advance();
-	ship.wrap();
-	advanceBullets();
-	handleCollisions();
+	if (ship.isAlive())
+	{
+		advanceAsteroids();
+		ship.advance();
+		ship.wrap();
+		advanceBullets();
+		handleCollisions();
+	}
 	cleanUp();
 }
 
@@ -118,7 +121,8 @@ void Game::draw(const Interface & ui)
 	   }
    }
 
-   ship.draw();
+   if (ship.isAlive())
+      ship.draw();
 
    for (int i = 0; i < bullets.size(); i++)
    {
@@ -131,33 +135,36 @@ void Game::draw(const Interface & ui)
 
 void Game::handleInput(const Interface & ui)
 {
-	if (ui.isLeft())
+	if (ship.isAlive())
 	{
-		ship.rotateLeft();
-	}
+		if (ui.isLeft())
+		{
+			ship.rotateLeft();
+		}
 
-	if (ui.isRight())
-	{
-		ship.rotateRight();
-	}
+		if (ui.isRight())
+		{
+			ship.rotateRight();
+		}
 
-	if (ui.isUp())
-	{
-		ship.boost();
-		ship.setThrust(true);
-	}
-	else
-	{
-		ship.setThrust(false);
-	}
+		if (ui.isUp())
+		{
+			ship.boost();
+			ship.setThrust(true);
+		}
+		else
+		{
+			ship.setThrust(false);
+		}
 
-	if (ui.isSpace())
-	{
-		Bullet newBullet;
-		newBullet.fire(ship.getPoint(), ship.getOrientation(), ship.getVelocity());
+		if (ui.isSpace())
+		{
+			Bullet newBullet;
+			newBullet.fire(ship.getPoint(), ship.getOrientation(), ship.getVelocity());
 
-		bullets.push_back(newBullet);
-		cout << ui.isSpace();
+			bullets.push_back(newBullet);
+			cout << ui.isSpace();
+		}
 	}
 }
 
@@ -220,7 +227,6 @@ void Game::handleCollisions()
 	for (vector<Rock*>::iterator iRock = newRocks.begin(); iRock != newRocks.end(); iRock++)
 	{
 		asteroids.push_back(*iRock);
-		cout << "PushBack newrocks\n";
 	}
 
 	newRocks.clear();
@@ -256,7 +262,6 @@ void Game::breakBigRock(std::vector<Rock*> & newRocks, Rock * copy)
 	newRocks.push_back(new MedRock(copy->getPoint()));
 	newRocks.push_back(new MedRock(copy->getPoint()));
 	newRocks.push_back(new  SmRock(copy->getPoint()));
-	cout << "bigRock broken\n";
 }
 
 void Game::breakMedRock(std::vector<Rock*> & newRocks, Rock * copy)
