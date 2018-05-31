@@ -154,7 +154,7 @@ void Game::handleInput(const Interface & ui)
 	if (ui.isSpace())
 	{
 		Bullet newBullet;
-		newBullet.fire(ship.getPoint(), ship.getOrientation());
+		newBullet.fire(ship.getPoint(), ship.getOrientation(), ship.getVelocity());
 
 		bullets.push_back(newBullet);
 		cout << ui.isSpace();

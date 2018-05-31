@@ -18,6 +18,7 @@ public:
 
 	// takes a position and an angle to shoot towards
 	void fire(Point point, float angle);
+	void fire(Point point, float angle, Velocity vel);
 	void draw();
 };
 
