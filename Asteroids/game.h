@@ -40,6 +40,7 @@ public:
 	void draw(const Interface & ui);
 	void handleInput(const Interface & ui);
 	void handleCollisions();
+	void cleanUp();
 
 	void createBigRock(Point pos);
 

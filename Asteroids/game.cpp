@@ -105,6 +105,7 @@ void Game::advance()
 	ship.wrap();
 	advanceBullets();
 	handleCollisions();
+	cleanUp();
 }
 
 void Game::draw(const Interface & ui)
@@ -173,25 +174,34 @@ void Game::handleCollisions()
 				case BIG_ROCK_SIZE:
 					if (BIG_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
-						(*iBullet).kill();
-						breakBigRock(newRocks, *iRock);
-						(**iRock).kill();
+						if ((*iBullet).isAlive() && (**iRock).isAlive())
+						{
+							(*iBullet).kill();
+							breakBigRock(newRocks, *iRock);
+							(**iRock).kill();
+						}
 						
 					}
 					break;
 				case MEDIUM_ROCK_SIZE:
 					if (MEDIUM_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
-						(*iBullet).kill();
-						breakMedRock(newRocks, *iRock);
-						(**iRock).kill();
+						if ((*iBullet).isAlive() && (**iRock).isAlive())
+						{
+							(*iBullet).kill();
+							breakMedRock(newRocks, *iRock);
+							(**iRock).kill();
+						}
 					}
 					break;
 				case SMALL_ROCK_SIZE:
 					if (SMALL_ROCK_SIZE > getClosestDistance(**iRock, *iBullet))
 					{
-						(*iBullet).kill();
-						(**iRock).kill();
+						if ((*iBullet).isAlive() && (**iRock).isAlive())
+						{
+							(*iBullet).kill();
+							(**iRock).kill();
+						}
 					}
 					break;
 				default:
@@ -214,6 +224,25 @@ void Game::handleCollisions()
 	}
 
 	newRocks.clear();
+}
+
+void Game::cleanUp()
+{
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		if (!bullets[i].isAlive())
+		{
+			bullets.erase(bullets.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < asteroids.size(); i++)
+	{
+		if (!asteroids[i]->isAlive())
+		{
+			asteroids.erase(asteroids.begin() + i);
+		}
+	}
 }
 
 void Game::createBigRock(Point pos)
