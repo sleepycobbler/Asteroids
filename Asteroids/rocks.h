@@ -21,7 +21,8 @@ protected:
 	int angle;
 	int size;
 public:
-	virtual void draw() = 0;
+	virtual void draw()   = 0;
+	virtual void rotate() = 0;
 	void rotate(int angle);
 	virtual int getSize() = 0;
 };
@@ -37,6 +38,7 @@ public:
 	~BigRock();
 	int getSize();
 	void draw();
+	void rotate();
 };
 
 //   MediumRock
@@ -48,6 +50,7 @@ public:
 	~MedRock();
 	int getSize();
 	void draw();
+	void rotate();
 };
 
 //   SmallRock
@@ -59,6 +62,7 @@ public:
 	~SmRock();
 	int getSize();
 	void draw();
+	void rotate();
 };
 
 #endif /* rocks_h */

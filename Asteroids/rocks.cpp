@@ -42,6 +42,11 @@ void BigRock::draw()
 	drawLargeAsteroid(pos, rotation);
 }
 
+void BigRock::rotate()
+{
+	rotation += BIG_ROCK_SPIN;
+}
+
 MedRock::MedRock()
 {
 	rotation = MEDIUM_ROCK_SPIN;
@@ -75,6 +80,11 @@ void MedRock::draw()
 	drawMediumAsteroid(pos, rotation);
 }
 
+void MedRock::rotate()
+{
+	rotation += MEDIUM_ROCK_SPIN;
+}
+
 SmRock::SmRock()
 {
 	rotation = SMALL_ROCK_SPIN;
@@ -106,4 +116,9 @@ int SmRock::getSize()
 void SmRock::draw()
 {
 	drawSmallAsteroid(pos, rotation);
+}
+
+void SmRock::rotate()
+{
+	rotation += SMALL_ROCK_SPIN;
 }
