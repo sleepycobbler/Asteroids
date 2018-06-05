@@ -27,7 +27,7 @@ void Game::advanceAsteroids()
 	for (int i = 0; i < asteroids.size(); i++)
 	{
 		asteroids[i]->advance();
-		asteroids[i]->rotate(2);
+		asteroids[i]->rotate();
 		asteroids[i]->wrap();
 	}
 }
@@ -35,11 +35,11 @@ void Game::advanceAsteroids()
 Game::Game(Point tl, Point br)
 	: topLeft(tl), bottomRight(br)
 {
-	for (int i = 0; i < 5; i++)
-	{
-		Point pos(200, random(-200, 200));
-		createBigRock(pos);
-	}
+	state = GS_MENU;
+	select.setY(6);
+	select.setX(-100);
+	createBigRock(Point(-125, 150));
+	createBigRock(Point(125, 150));
 }
 
 Game::~Game()
@@ -100,71 +100,131 @@ void Game::advanceBullets()
 
 void Game::advance()
 {
-	if (ship.isAlive())
+
+	switch (state)
 	{
-		advanceAsteroids();
-		ship.advance();
-		ship.wrap();
-		advanceBullets();
-		handleCollisions();
+	case GS_MENU:
+		for (int i = 0; i < asteroids.size(); i++)
+		{
+			asteroids[i]->rotate();
+		}
+		break;
+	case GS_START:
+		for (int i = 0; i < 5; i++)
+		{
+			Point pos(200, random(-200, 200));
+			createBigRock(pos);
+		}
+		state = GS_RUN;
+	case GS_RUN:
+		if (ship.isAlive())
+		{
+			advanceAsteroids();
+			ship.advance();
+			ship.wrap();
+			advanceBullets();
+			handleCollisions();
+		}
+		break;
+	default:
+		break;
 	}
+
 	cleanUp();
 }
 
 void Game::draw(const Interface & ui)
 {
-   for (int i = 0; i < asteroids.size(); i++)
+   switch(state)
    {
-	   if (asteroids[i]->isAlive())
-	   {
-		   asteroids[i]->draw();
-	   }
-   }
+   case GS_MENU:
+	   drawLargeText(Point(-45, 150), "Asteroids");
 
-   if (ship.isAlive())
-      ship.draw();
+	   drawAsteroids();
 
-   for (int i = 0; i < bullets.size(); i++)
-   {
-	   if (bullets[i].isAlive())
+	   drawText(Point(-70, 100), "By Max Schuhmacher");
+
+	   drawText(Point(-170, 50), "Use the Up and Down arrows to navigate, press Space to select");
+
+	   drawShip(select, 270, true);
+
+	   drawLargeText(Point(-65, 0), "Start");
+	   drawLargeText(Point(-65, -50), "Credits");
+	   break;
+   case GS_START:
+   case GS_RUN:
+	   drawAsteroids();
+
+	   if (ship.isAlive())
+		   ship.draw();
+
+	   for (int i = 0; i < bullets.size(); i++)
 	   {
-		   bullets[i].draw();
+		   if (bullets[i].isAlive())
+		   {
+			   bullets[i].draw();
+		   }
 	   }
+	   break;
+   case GS_OPTIONS:
+	   break;
+   case GS_PAUSE:
+	   break;
+   case GS_OVER:
+	   break;
+   default:
+	   break;
    }
 }
 
 void Game::handleInput(const Interface & ui)
 {
-	if (ship.isAlive())
+	switch (state)
 	{
-		if (ui.isLeft())
+	case GS_MENU:
+		break;
+	case GS_START:
+	case GS_RUN:
+		if (ship.isAlive())
 		{
-			ship.rotateLeft();
-		}
+			if (ui.isLeft())
+			{
+				ship.rotateLeft();
+			}
 
-		if (ui.isRight())
-		{
-			ship.rotateRight();
-		}
+			if (ui.isRight())
+			{
+				ship.rotateRight();
+			}
 
-		if (ui.isUp())
-		{
-			ship.boost();
-			ship.setThrust(true);
-		}
-		else
-		{
-			ship.setThrust(false);
-		}
+			if (ui.isUp())
+			{
+				ship.boost();
+				ship.setThrust(true);
+			}
+			else
+			{
+				ship.setThrust(false);
+			}
 
-		if (ui.isSpace())
-		{
-			Bullet newBullet;
-			newBullet.fire(ship.getPoint(), ship.getOrientation(), ship.getVelocity());
+			if (ui.isSpace())
+			{
+				Bullet newBullet;
+				newBullet.fire(ship.getPoint(), ship.getOrientation(), ship.getVelocity());
 
-			bullets.push_back(newBullet);
-			cout << ui.isSpace();
+				bullets.push_back(newBullet);
+				cout << ui.isSpace();
+			}
 		}
+		break;
+	case GS_OPTIONS:
+		break;
+	case GS_PAUSE:
+		break;
+	case GS_OVER:
+		break;
+	default:
+		break;
 	}
 }
 
@@ -268,5 +328,16 @@ void Game::breakMedRock(std::vector<Rock*> & newRocks, Rock * copy)
 {
 	newRocks.push_back(new SmRock(copy->getPoint()));
 	newRocks.push_back(new SmRock(copy->getPoint()));
+}
+
+void Game::drawAsteroids()
+{
+	for (int i = 0; i < asteroids.size(); i++)
+	{
+		if (asteroids[i]->isAlive())
+		{
+			asteroids[i]->draw();
+		}
+	}
 }
 
