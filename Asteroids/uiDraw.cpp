@@ -160,6 +160,24 @@ void drawText(const Point & topLeft, const char * text)
       glutBitmapCharacter(pFont, *p);
 }
 
+/*************************************************************************
+* DRAW LARGE TEXT
+* Draw text using a simple bitmap font
+*   INPUT  topLeft   The top left corner of the text
+*          text      The text to be displayed
+************************************************************************/
+void drawLargeText(const Point & topLeft, const char * text)
+{
+	void *pFont = GLUT_BITMAP_HELVETICA_18;  // also try _18
+
+											 // prepare to draw the text from the top-left corner
+	glRasterPos2f(topLeft.getX(), topLeft.getY());
+
+	// loop through the text
+	for (const char *p = text; *p; p++)
+		glutBitmapCharacter(pFont, *p);
+}
+
 /************************************************************************
  * DRAW POLYGON
  * Draw a POLYGON from a given location (center) of a given size (radius).

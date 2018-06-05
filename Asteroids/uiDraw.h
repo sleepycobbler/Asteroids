@@ -37,6 +37,12 @@ void drawNumber(const Point & topLeft, int number);
  ************************************************************************/
 void drawText(const Point & topLeft, const char * text);
 
+/*************************************************************************
+* DRAW TEXT
+* Draw text using a simple bitmap font
+************************************************************************/
+void drawLargeText(const Point & topLeft, const char * text);
+
 /************************************************************************
  * ROTATE
  * Rotate a given point (point) around a given origin (center) by a given
