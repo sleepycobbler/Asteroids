@@ -20,7 +20,7 @@ Point::Point(float x, float y) : x(0.0), y(0.0)
    setX(x);
    setY(y);
 }
-
+/*notice me senpai*/
 /*******************************************
  * POINT : SET X
  * Set the x position if the value is within range
